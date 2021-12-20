@@ -1,6 +1,9 @@
 package com.company;
 
 import Clases.Persona;
+import Excepciones.CodPostalNoValido;
+import Excepciones.FechaNoValida;
+import Excepciones.ValorNoValido;
 
 
 import javax.swing.*;
@@ -18,11 +21,17 @@ public class Main {
             sacarDatos();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error tipo: " + e.getClass());
+        }catch (CodPostalNoValido e){
+            JOptionPane.showMessageDialog(null, "Error en el CodPostal");
+        }catch (FechaNoValida e){
+            JOptionPane.showMessageDialog(null, "Error en la Fecha");
+        } catch (ValorNoValido e){
+            JOptionPane.showMessageDialog(null, "Error en el valor");
         }
 
     }
 
-    public static void pedirDatos() {
+    public static void pedirDatos() throws Exception {
 
         do {
             String nombre = JOptionPane.showInputDialog(null, "Introduce nombre");
@@ -42,13 +51,13 @@ public class Main {
 
     }
 
-    public static void sacarDatos() {
+    public static void sacarDatos()throws Exception {
         personaMVieja();
         personaElche();
         personaMEdad();
     }
 
-    public static void personaMVieja() {
+    public static void personaMVieja() throws Exception {
         LocalDate mayor = LocalDate.now();
         String nombreMayor = "";
         int x;
@@ -62,7 +71,7 @@ public class Main {
                 "La persona mas mayor es " + mayor + " llamado " + nombreMayor);
     }
 
-    public static void personaElche() {
+    public static void personaElche() throws Exception {
         String perElche = "";
         String nombreElche;
         int x;
@@ -77,7 +86,7 @@ public class Main {
         JOptionPane.showMessageDialog(null, perElche);
     }
 
-    public static void personaMEdad() {
+    public static void personaMEdad() throws Exception {
         LocalDate fecha2 = LocalDate.now().minusYears(18);
         int x;
         int contador = 0;

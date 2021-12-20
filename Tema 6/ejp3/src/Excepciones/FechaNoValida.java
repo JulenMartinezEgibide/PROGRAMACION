@@ -1,4 +1,5 @@
 package Excepciones;
 
-public class FechaNoValida {
+public class FechaNoValida extends Exception{
+
 }

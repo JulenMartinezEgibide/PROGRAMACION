@@ -1,4 +1,5 @@
 package Excepciones;
 
-public class ValorNoValido {
+public class ValorNoValido extends Exception{
+
 }

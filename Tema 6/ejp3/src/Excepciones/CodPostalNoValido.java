@@ -1,4 +1,5 @@
 package Excepciones;
 
-public class CodPostalNoValido{
+public class CodPostalNoValido extends Exception{
+
 }

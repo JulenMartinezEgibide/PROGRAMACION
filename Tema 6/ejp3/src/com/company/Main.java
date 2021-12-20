@@ -19,14 +19,14 @@ public class Main {
             listaPersona = new ArrayList();
             pedirDatos();
             sacarDatos();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error tipo: " + e.getClass());
-        }catch (CodPostalNoValido e){
+        } catch (CodPostalNoValido e){
             JOptionPane.showMessageDialog(null, "Error en el CodPostal");
-        }catch (FechaNoValida e){
+        } catch (FechaNoValida e){
             JOptionPane.showMessageDialog(null, "Error en la Fecha");
         } catch (ValorNoValido e){
             JOptionPane.showMessageDialog(null, "Error en el valor");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error tipo: " + e.getClass());
         }
 
     }

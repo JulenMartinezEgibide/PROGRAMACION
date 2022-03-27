@@ -1,10 +1,14 @@
 package Vista;
 
+import com.company.Main;
+
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class V2 extends JDialog {
-    private JPanel contentPane;
+    private JPanel panelV2;
     private JButton buttonAcep;
     private JButton buttonCancel;
     private JButton buttonAnt;
@@ -14,56 +18,164 @@ public class V2 extends JDialog {
     private JTextField tFEdad;
     private JTextField tFProfesion;
     private JTextField tFTelef;
+    private JPanel pBAcep;
 
-    public V2() {
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonAcep);
+    private int option;
+    public V2(int op) {
+        option=op;
+        if (option != 3) {
+            mostrarBotones2(true);
+        }
+        else
+        {
+
+            mostrarBotones2(false);
+
+        }
+
 
         buttonAcep.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    if (option == 1) {
+                        // alta de persona
+                        if (validarDatos())
+                            Main.getDatos(tFNombre.getText(), tFEdad.getText(), tFProfesion.getText(), tFTelef.getText());
+                    }
+                    else
+                        Main.volverMenu();
+
+                }
+                catch(Exception ex)
+                {
+                    if (option == 1)
+                        JOptionPane.showMessageDialog(null, "Problemas al introducir datos \n" + ex.getMessage());
+                    else
+                        JOptionPane.showMessageDialog(null, "Problemas al mirar los datos \n" + ex.getMessage());
+                }
             }
         });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
+        tFNombre.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                if (option == 2)
+                {
+                    try {
+                        validarNombre();
+                        Main.getNombre(tFNombre.getText());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                }
             }
         });
-
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
+        buttonAnt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    Main.getAnterior();
+                }
+                catch(Exception ex)
+                {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
             }
         });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
+        buttonSig.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+                try
+                {
+                    Main.getSiguiente();
+                }
+                catch(Exception ex)
+                {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
             }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        });
+        salirButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Main.volverMenu();
+            }
+        });
+    }
+    public boolean validarDatos()
+    {
+        try
+        {
+            validarNombre(); // saco esta validación para reutilizarla en el caso de consulta
+
+            if (tFEdad.getText().isEmpty())
+                throw new Exception(" La edad es obligatorio");
+            if (tFProfesion.getText().isEmpty())
+                throw new Exception(" La profesión es obligatorio");
+            if (tFTelef.getText().isEmpty())
+                throw new Exception(" El teléfono es obligatorio");
+
+            Pattern patron = Pattern.compile("^[0-9]{1,3}$");
+            Matcher mat = patron.matcher(tFEdad.getText());
+            if (!mat.matches())
+                throw new Exception(" La edad no esta bien puesto");
+
+            patron = Pattern.compile("^[A-Z][a-z ]*$");
+            mat = patron.matcher(tFProfesion.getText());
+            if (!mat.matches())
+                throw new Exception(" La profesión no esta bien puesto");
+
+            patron = Pattern.compile("^[6789][0-9]{8}$");
+            mat = patron.matcher(tFTelef.getText());
+            if (!mat.matches())
+                throw new Exception(" El teléfono no esta bien puesto");
+
+            return true;
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,"Problemas en la validacion \n"+ e.getMessage());
+            return false;
+        }
     }
 
-    private void onOK() {
-        // add your code here
-        dispose();
+    public void validarNombre() throws Exception{
+        if (tFNombre.getText().isEmpty())
+            throw new Exception(" El nombre es un dato obligatorio");
+        Pattern patron = Pattern.compile("^[A-Z][a-z ]{2,}([A-Z][a-z ]{2,})*$");
+        Matcher mat = patron.matcher(tFNombre.getText());
+        if (!mat.matches())
+            throw new Exception(" El nombre no tiene un formato adecuado");
+    }
+    public JPanel getPanelV2(){
+        return panelV2;
     }
 
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
+    public void setDatosPersona(Integer e,String p,String t)
+    {
+        tFEdad.setText(e.toString());
+        tFProfesion.setText(p);
+        tFTelef.setText(t);
+        // Deshabilitar para que no modifique??
+        buttonAcep.requestFocus();
+
     }
 
-    public static void main(String[] args) {
-        V2 dialog = new V2();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    public void setDatosPersona(String n,Integer e,String p,String t)
+    {
+        tFNombre.setText(n);
+        tFEdad.setText(e.toString());
+        tFProfesion.setText(p);
+        tFTelef.setText(t);
+        // Deshabilitar para que no modifique??
+        buttonSig.requestFocus();
+    }
+
+    public void mostrarBotones2(boolean b)
+    {
+        pBAcep.setVisible(b);
     }
 }
 
-me

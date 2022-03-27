@@ -17,7 +17,6 @@ public class Vp {
                 try
                 {
                     validarOpcion();
-                    // Enviar al main la opción elegida para que sepa que hacer. Si algo está mal hemos ido a un catch
                     Main.getOpcion(Integer.parseInt(tFOpcion.getText()));
                     tFOpcion.setText("");
                 }
@@ -32,6 +31,7 @@ public class Vp {
             }
         });
     }
+
     public void validarOpcion() throws Exception
     {
         int o = Integer.parseInt(tFOpcion.getText());
